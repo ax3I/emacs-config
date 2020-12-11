@@ -37,6 +37,9 @@
 (setq display-line-numbers-type t)
 
 
+(setq python-shell-interpreter "python"
+      python-shell-interpreter-args "-i")
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -61,3 +64,9 @@
   :mode "Jenkinsfile\\'")
 (use-package! dockerfile-mode
   :mode "Dockerfile\\'")
+(use-package! elpy
+  :ensure t
+  :init
+  (elpy-enable))
+;; hooks
+(add-hook! 'python-mode-hook 'blacken-mode)

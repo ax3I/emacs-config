@@ -52,3 +52,5 @@
 ;; my configuration
 (package! groovy-mode)
 (package! dockerfile-mode)
+(package! elpy)
+(package! blacken)
