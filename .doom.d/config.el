@@ -36,8 +36,8 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
-(setq python-shell-interpreter "python"
+;; elpy interpreter
+(setq python-shell-interpreter "python3"
       python-shell-interpreter-args "-i")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -58,6 +58,8 @@
 ;; they are implemented.
 
 ;; my configuration
+;;(use-package! elpy-mode
+;;  :mode "\\.py\\'")
 (use-package! groovy-mode
   :mode "\\.groovy\\'")
 (use-package! groovy-mode
@@ -68,5 +70,6 @@
   :ensure t
   :init
   (elpy-enable))
+
 ;; hooks
 (add-hook! 'python-mode-hook 'blacken-mode)
