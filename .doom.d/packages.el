@@ -53,5 +53,3 @@
 (package! groovy-mode)
 (package! dockerfile-mode)
 (package! elpy)
-(package! blacken)
-(package! flycheck)

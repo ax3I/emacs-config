@@ -27,7 +27,6 @@
 ;; `load-theme' function. This is the default:
 ;;(setq doom-theme 'doom-one)
 ;;(setq doom-theme 'doom-one-light)
-;;(setq doom-theme 'doom-nord)
 ;;(setq doom-theme 'doom-city-lights)
 ;;(setq doom-theme 'doom-dracula)
 (setq doom-theme 'doom-mono-light)
@@ -69,17 +68,9 @@
   :init
   (elpy-enable))
 
-;; elpy interpreter
 (setq python-shell-interpreter "python3"
       python-shell-interpreter-args "-i")
 
-;; flycheck
-;; (after! flycheck
-;;   (add-to-list 'flycheck-check-syntax-automatically 'idle-change))
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode))
-
-;; hooks
-(add-hook! 'python-mode-hook 'blacken-mode)
+(add-hook 'elpy-mode-hook (lambda ()
+                            (add-hook 'before-save-hook
+                                      'elpy-black-fix-code nil t)))
