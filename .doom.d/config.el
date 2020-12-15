@@ -26,7 +26,11 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 ;;(setq doom-theme 'doom-one)
-(setq doom-theme 'doom-dracula)
+;;(setq doom-theme 'doom-one-light)
+;;(setq doom-theme 'doom-nord)
+;;(setq doom-theme 'doom-city-lights)
+;;(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-mono-light)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -35,10 +39,6 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-
-;; elpy interpreter
-(setq python-shell-interpreter "python3"
-      python-shell-interpreter-args "-i")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -58,8 +58,6 @@
 ;; they are implemented.
 
 ;; my configuration
-;;(use-package! elpy-mode
-;;  :mode "\\.py\\'")
 (use-package! groovy-mode
   :mode "\\.groovy\\'")
 (use-package! groovy-mode
@@ -70,6 +68,18 @@
   :ensure t
   :init
   (elpy-enable))
+
+;; elpy interpreter
+(setq python-shell-interpreter "python3"
+      python-shell-interpreter-args "-i")
+
+;; flycheck
+;; (after! flycheck
+;;   (add-to-list 'flycheck-check-syntax-automatically 'idle-change))
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode))
 
 ;; hooks
 (add-hook! 'python-mode-hook 'blacken-mode)

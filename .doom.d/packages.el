@@ -54,3 +54,4 @@
 (package! dockerfile-mode)
 (package! elpy)
 (package! blacken)
+(package! flycheck)
