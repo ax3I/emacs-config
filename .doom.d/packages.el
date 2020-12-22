@@ -49,7 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-;; my configuration
 (package! groovy-mode)
 (package! dockerfile-mode)
 (package! elpy)
+(package! eshell-prompt-extras)
