@@ -11,8 +11,9 @@
 
 ;; Configure package sources
 (setq package-enable-at-startup nil)    ;; prevents a second package load and slightly improves startup time
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '(("melpa" . "http://melpa.org/packages/")
+	                         ("org" . "https://orgmode.org/elpa/")
+                                 ("elpa" . "https://elpa.gnu.org/packages/")))
 ;; fix "Failed to download 'gnu' archive"
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (package-initialize)
@@ -22,7 +23,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; (setq use-package-always-ensure t)
+;; Always download package if not exist
+(setq use-package-always-ensure t)
+
 
 ;;; Emacs Config
 (use-package emacs
@@ -58,33 +61,37 @@
 (setq auto-save-list-file-name  nil) ; Don't want any .saves files
 (setq auto-save-default         nil) ; Don't want any auto saving
 
-;; Use theme.
+;; Use theme
 (use-package leuven-theme
-  :ensure t
   :config
   (load-theme 'leuven t))
 
 
 ;;; Packages
 
+;; Diminish minor modes
+(use-package diminish)
+
 ;; Help for keybindings
 (use-package which-key
-  :ensure t
-  :config (which-key-mode))
+  :init
+  (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 1))
 
 ;; Git Magic
-(use-package magit
-  :ensure t)
+(use-package magit)
 
 ;; Display line changes in gutter based on git history. Enable it everywhere.
 (use-package git-gutter
-  :ensure t
+  :diminish
   :config
   (global-git-gutter-mode +1))
 
 ;; Syntax Check
 (use-package flycheck
-  :ensure t
+  :diminish
   :config
   (add-hook 'after-init-hook 'global-flycheck-mode)
   (setq-default flycheck-highlighting-mode 'lines)
@@ -92,13 +99,16 @@
 
 ;; Complete Anything
 (use-package company
-  :ensure t
+  :diminish
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
 
 ;; Yasnippet
 (use-package yasnippet
-  :ensure t
+  :diminish yas-minor-mode
   :config
   (yas-global-mode 1))
 
@@ -108,25 +118,24 @@
 
 ;; Ivy
 (use-package ivy
-  :ensure t
+  :diminish
   :config
   (ivy-mode 1))
 
 ;; Projectile
 (use-package projectile
-  :ensure t
+  :diminish projectile-mode
   :config
   (projectile-mode +1))
 
 ;; Auto ()
 (use-package smartparens
-  :ensure t
+  :diminish
   :config
   (add-hook 'prog-mode-hook 'smartparens-mode))
 
 ;; Highlight parens etc. for improved readability.
 (use-package rainbow-delimiters
-  :ensure t
   :config
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
@@ -135,44 +144,49 @@
 
 ;; Python
 (use-package python
-  :ensure t
-  :mode
-  ("\\.py\\'" . python-mode)
+  :mode ("\\.py\\'" . python-mode)
   :config
   (setq python-shell-interpreter "python3"
 	python-shell-interpreter-args "-i"))
 
+;; Virtualenv
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
+
 ;; Black formatter. Need: pip3 install black
 (use-package blacken
-  :ensure t
   :config
   (add-hook 'python-mode-hook 'blacken-mode))
 
 ;; Groovy
 (use-package groovy-mode
-  :ensure t
-  :mode
-  ("\\.groovy\\'" . groovy-mode)
-  ("Jenkinsfile\\'" . groovy-mode))
+  :mode (("\\.groovy\\'" . groovy-mode)
+         ("Jenkinsfile\\'" . groovy-mode)))
 
 ;; Dockerfile
 (use-package dockerfile-mode
-  :ensure t
   :mode
   ("Dockerfile\\'" . dockerfile-mode))
 
 ;; Yaml
 (use-package yaml-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
 
 ;; Markdown
 (use-package markdown-mode
-  :ensure t
+  :defer t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
+
+;; Bazel
+(use-package bazel-mode
+  :defer t)
+
+;; Nginx
+(use-package nginx-mode)
 
 ;;; init.el ends here
