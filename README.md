@@ -1,2 +1,2 @@
 # emacs-config
-Now for doom-emacs
+My config for vanilla emacs
