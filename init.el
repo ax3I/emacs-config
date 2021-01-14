@@ -26,6 +26,8 @@
 ;; Always download package if not exist
 (setq use-package-always-ensure t)
 
+;; Prevent asking for confirmation to kill processes when exiting.
+(custom-set-variables '(confirm-kill-processes nil))
 
 ;;; Emacs Config
 (use-package emacs
