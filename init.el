@@ -11,9 +11,9 @@
 
 ;; Configure package sources
 (setq package-enable-at-startup nil)    ;; prevents a second package load and slightly improves startup time
-(add-to-list 'package-archives '(("melpa" . "http://melpa.org/packages/")
-	                         ("org" . "https://orgmode.org/elpa/")
-                                 ("elpa" . "https://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+;	                         ("org" . "https://orgmode.org/elpa/")
+;                                 ("elpa" . "https://elpa.gnu.org/packages/")))
 ;; fix "Failed to download 'gnu' archive"
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (package-initialize)
@@ -48,6 +48,7 @@
 ;; Maximize on startup.
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
+;; Ask y-n instead yes-no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Delete trailing spaces and add new line in the end of a file on save.
@@ -108,6 +109,10 @@
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
 
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+
 ;; Yasnippet
 (use-package yasnippet
   :diminish yas-minor-mode
@@ -145,16 +150,14 @@
 ;;; Languages
 
 ;; Python
-(use-package python
-  :mode ("\\.py\\'" . python-mode)
-  :config
-  (setq python-shell-interpreter "python3"
-	python-shell-interpreter-args "-i"))
+(use-package python-mode
+  :custom
+  (python-shell-interpreter "python3"))
 
-;; Virtualenv
-(use-package pyvenv
-  :config
-  (pyvenv-mode 1))
+(use-package elpy
+  :defer t
+  :init
+  (advice-add 'python-mode :before 'elpy-enable))
 
 ;; Black formatter. Need: pip3 install black
 (use-package blacken
@@ -189,6 +192,11 @@
   :defer t)
 
 ;; Nginx
-(use-package nginx-mode)
+(use-package nginx-mode
+  :defer t)
+
+;; UML diagramms
+(use-package plantuml-mode
+  :defer t)
 
 ;;; init.el ends here
