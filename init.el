@@ -6,6 +6,11 @@
 ;;
 ;;; Code:
 
+;;; Initialization
+
+;; increase GC-limit up to 100M for boot speedup
+(setq gc-cons-threshold 100000000)
+
 ;;; Package Support
 (require 'package)
 
@@ -24,7 +29,10 @@
   (package-install 'use-package))
 
 ;; Always download package if not exist
-(setq use-package-always-ensure t)
+(use-package use-package
+  :ensure nil
+  :custom
+  (setq use-package-always-ensure t))
 
 ;; Prevent asking for confirmation to kill processes when exiting.
 (custom-set-variables '(confirm-kill-processes nil))
@@ -34,7 +42,7 @@
   :config
   (tool-bar-mode -1)                    ;; Let's turn off unwanted window decoration.
   (menu-bar-mode -1)
-  (scroll-bar-mode t)
+  (scroll-bar-mode -1)
   (global-hl-line-mode t)               ;; Highlighting the active line
   (column-number-mode t)                ;; Show column number
   :custom
@@ -58,6 +66,9 @@
 ;; Show full path in the title bar.
 (global-visual-line-mode t)
 (setq-default frame-title-format "%b (%f)")
+
+;; eshell tab-complete
+(setq eshell-cmpl-cycle-completions nil)
 
 ;; Backup disable
 (setq make-backup-files         nil) ; Don't want any backup files
@@ -127,7 +138,10 @@
 (use-package ivy
   :diminish
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-count-format "(%d/%d) "))
 
 ;; Projectile
 (use-package projectile
@@ -149,7 +163,6 @@
 
 ;;; Languages
 
-;; Python
 (use-package python-mode
   :custom
   (python-shell-interpreter "python3"))
@@ -179,6 +192,12 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
 
+;; Json
+(use-package json-mode
+  :defer t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
+
 ;; Markdown
 (use-package markdown-mode
   :defer t
@@ -195,8 +214,18 @@
 (use-package nginx-mode
   :defer t)
 
-;; UML diagramms
-(use-package plantuml-mode
-  :defer t)
+;; Shell
+(use-package sh-script
+  :ensure nil
+  :mode
+  ("\\.sh\\'" . shell-script-mode)
+  ("\\.bash\\'" . shell-script-mode))
+
+;; Web
+(use-package web-mode
+  :commands (web-mode)
+  :mode
+  ("\\.html?\\'" . web-mode)
+  ("\\.css\\'" . web-mode))
 
 ;;; init.el ends here
