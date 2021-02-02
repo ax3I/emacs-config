@@ -121,6 +121,7 @@
   (company-idle-delay 0.0))
 
 (use-package company-box
+  :diminish
   :hook (company-mode . company-box-mode))
 
 
@@ -167,10 +168,23 @@
   :custom
   (python-shell-interpreter "python3"))
 
-(use-package elpy
-  :defer t
+(use-package lsp-mode
   :init
-  (advice-add 'python-mode :before 'elpy-enable))
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration)
+  :commands lsp)
+
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
+
+;; Virtualenv
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
 
 ;; Black formatter. Need: pip3 install black
 (use-package blacken
@@ -227,5 +241,10 @@
   :mode
   ("\\.html?\\'" . web-mode)
   ("\\.css\\'" . web-mode))
+
+;; Pip
+(use-package pip-requirements
+  :hook
+  (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
 
 ;;; init.el ends here
