@@ -49,6 +49,9 @@
   (inhibit-startup-screen t)            ;; Don't display the help screen on startup.
   )
 
+;; Font Size - The value is in 1/10pt, so 100 will give you 10pt, etc.
+(set-face-attribute 'default nil :height 105)
+
 ;; Move custom data
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
@@ -79,6 +82,10 @@
 (use-package leuven-theme
   :config
   (load-theme 'leuven t))
+
+;(use-package modus-themes
+;  :config
+;  (load-theme 'modus-operandi t t))
 
 
 ;;; Packages
@@ -132,8 +139,7 @@
   (yas-global-mode 1))
 
 ;; Snippets collection
-(use-package yasnippet-snippets
-  :ensure t)
+(use-package yasnippet-snippets)
 
 ;; Ivy
 (use-package ivy
@@ -164,7 +170,15 @@
 
 ;;; Languages
 
+;; Python
+;(use-package python
+;  :mode ("\\.py\\'" . python-mode)
+;  :config
+;  (setq python-shell-interpreter "python3"
+;	python-shell-interpreter-args "-i"))
+
 (use-package python-mode
+;  :hook (python-mode . lsp)
   :custom
   (python-shell-interpreter "python3"))
 
@@ -174,11 +188,20 @@
   (lsp-mode . lsp-enable-which-key-integration)
   :commands lsp)
 
+;; Disable LSP Headerline
+(setq lsp-headerline-breadcrumb-enable nil)
+
 (use-package lsp-pyright
   :ensure t
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp))))  ; or lsp-deferred
+
+
+;(use-package elpy
+;  :defer t
+;  :init
+;  (advice-add 'python-mode :before 'elpy-enable))
 
 
 ;; Virtualenv
@@ -246,5 +269,7 @@
 (use-package pip-requirements
   :hook
   (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
+
+(use-package csv-mode)
 
 ;;; init.el ends here
