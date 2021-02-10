@@ -28,12 +28,6 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; Always download package if not exist
-(use-package use-package
-  :ensure nil
-  :custom
-  (setq use-package-always-ensure t))
-
 ;; Prevent asking for confirmation to kill processes when exiting.
 (custom-set-variables '(confirm-kill-processes nil))
 
@@ -80,6 +74,7 @@
 
 ;; Use theme
 (use-package leuven-theme
+  :ensure t
   :config
   (load-theme 'leuven t))
 
@@ -91,10 +86,12 @@
 ;;; Packages
 
 ;; Diminish minor modes
-(use-package diminish)
+(use-package diminish
+  :ensure t)
 
 ;; Help for keybindings
 (use-package which-key
+  :ensure t
   :init
   (which-key-mode)
   :diminish which-key-mode
@@ -102,16 +99,19 @@
   (setq which-key-idle-delay 1))
 
 ;; Git Magic
-(use-package magit)
+(use-package magit
+  :ensure t)
 
 ;; Display line changes in gutter based on git history. Enable it everywhere.
 (use-package git-gutter
+  :ensure t
   :diminish
   :config
   (global-git-gutter-mode +1))
 
 ;; Syntax Check
 (use-package flycheck
+  :ensure t
   :diminish
   :config
   (add-hook 'after-init-hook 'global-flycheck-mode)
@@ -120,6 +120,7 @@
 
 ;; Complete Anything
 (use-package company
+  :ensure t
   :diminish
   :config
   (add-hook 'after-init-hook 'global-company-mode)
@@ -127,9 +128,10 @@
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
 
-(use-package company-box
-  :diminish
-  :hook (company-mode . company-box-mode))
+;(use-package company-box
+;  :ensure t
+;  :diminish
+;  :hook (company-mode . company-box-mode))
 
 
 ;; Yasnippet
@@ -139,10 +141,12 @@
   (yas-global-mode 1))
 
 ;; Snippets collection
-(use-package yasnippet-snippets)
+(use-package yasnippet-snippets
+  :ensure t)
 
 ;; Ivy
 (use-package ivy
+  :ensure t
   :diminish
   :config
   (ivy-mode 1)
@@ -152,18 +156,21 @@
 
 ;; Projectile
 (use-package projectile
+  :ensure t
   :diminish projectile-mode
   :config
   (projectile-mode +1))
 
 ;; Auto ()
 (use-package smartparens
+  :ensure t
   :diminish
   :config
   (add-hook 'prog-mode-hook 'smartparens-mode))
 
 ;; Highlight parens etc. for improved readability.
 (use-package rainbow-delimiters
+  :ensure t
   :config
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
@@ -171,25 +178,24 @@
 ;;; Languages
 
 ;; Python
-;(use-package python
-;  :mode ("\\.py\\'" . python-mode)
-;  :config
-;  (setq python-shell-interpreter "python3"
-;	python-shell-interpreter-args "-i"))
-
 (use-package python-mode
-;  :hook (python-mode . lsp)
+  :ensure t
   :custom
   (python-shell-interpreter "python3"))
 
 (use-package lsp-mode
+  :ensure t
   :init
   :hook
   (lsp-mode . lsp-enable-which-key-integration)
-  :commands lsp)
-
-;; Disable LSP Headerline
-(setq lsp-headerline-breadcrumb-enable nil)
+  :commands lsp
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil) ;; Disable LSP Headerline
+  (setq lsp-enable-file-watchers nil) ;; Ignore watch folders/files
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb Increase the amount of data which Emacs reads from the process.
+  (setq lsp-completion-provider :capf) ;; Make sure that you are using company-capf as the completion provider with
+  (setq lsp-idle-delay 0.500) ;; This variable determines how often lsp-mode will refresh the highlights, etc.
+  )
 
 (use-package lsp-pyright
   :ensure t
@@ -197,46 +203,59 @@
                           (require 'lsp-pyright)
                           (lsp))))  ; or lsp-deferred
 
+(use-package lsp-ui
+  :ensure t)
 
-;(use-package elpy
-;  :defer t
-;  :init
-;  (advice-add 'python-mode :before 'elpy-enable))
-
+(use-package py-isort
+  :ensure t
+  :config (setq py-isort-options '("-sl"))
+  :init (progn (add-hook 'python-mode-hook 'py-isort-before-save)))
 
 ;; Virtualenv
+;(use-package pyvenv
+;  :ensure t
+;  :config
+;  (pyvenv-mode 1))
+
 (use-package pyvenv
-  :config
-  (pyvenv-mode 1))
+  :ensure t
+  :config (defalias 'workon 'pyvenv-workon))
+
 
 ;; Black formatter. Need: pip3 install black
 (use-package blacken
+  :ensure t
   :config
   (add-hook 'python-mode-hook 'blacken-mode))
 
 ;; Groovy
 (use-package groovy-mode
+  :ensure t
   :mode (("\\.groovy\\'" . groovy-mode)
          ("Jenkinsfile\\'" . groovy-mode)))
 
 ;; Dockerfile
 (use-package dockerfile-mode
+  :ensure t
   :mode
   ("Dockerfile\\'" . dockerfile-mode))
 
 ;; Yaml
 (use-package yaml-mode
+  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
 
 ;; Json
 (use-package json-mode
+  :ensure t
   :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
 
 ;; Markdown
 (use-package markdown-mode
+  :ensure t
   :defer t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -245,10 +264,12 @@
 
 ;; Bazel
 (use-package bazel-mode
+  :ensure t
   :defer t)
 
 ;; Nginx
 (use-package nginx-mode
+  :ensure t
   :defer t)
 
 ;; Shell
@@ -260,6 +281,7 @@
 
 ;; Web
 (use-package web-mode
+  :ensure t
   :commands (web-mode)
   :mode
   ("\\.html?\\'" . web-mode)
@@ -267,9 +289,11 @@
 
 ;; Pip
 (use-package pip-requirements
+  :ensure t
   :hook
   (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
 
-(use-package csv-mode)
+(use-package csv-mode
+  :ensure t)
 
 ;;; init.el ends here
